@@ -8,6 +8,7 @@ import { ProfilePage } from './pages/ProfilePage';
 import { OutfitsPage } from './pages/OutfitsPage';
 import { LoaderIcon } from './components/Icons';
 import { initGoogleAuth, signOutGoogle, type AuthUser } from './services/authService';
+import { LoginPage } from './pages/LoginPage';
 
 function App() {
   const [activeTab, setActiveTab] = useState<'wardrobe' | 'profile' | 'outfits'>('wardrobe');
@@ -59,20 +60,25 @@ function App() {
       );
   }
 
+  if (!user) {
+    // Gate the app behind authentication
+    return <LoginPage />;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-gray-900 pb-20">
       <Header user={user} onSignOut={handleSignOut} />
       <Navigation activeTab={activeTab} setActiveTab={setActiveTab} itemsCount={items.length} />
-      
+
       <main className="max-w-4xl mx-auto w-full px-4 py-8">
         {activeTab === 'wardrobe' && (
-            <WardrobePage items={items} onItemsUpdate={setItems} />
+          <WardrobePage items={items} onItemsUpdate={setItems} />
         )}
         {activeTab === 'profile' && (
-            <ProfilePage profile={profile} onProfileUpdate={setProfile} />
+          <ProfilePage profile={profile} onProfileUpdate={setProfile} />
         )}
         {activeTab === 'outfits' && (
-            <OutfitsPage items={items} outfits={outfits} profile={profile} onOutfitsUpdate={setOutfits} />
+          <OutfitsPage items={items} outfits={outfits} profile={profile} onOutfitsUpdate={setOutfits} />
         )}
       </main>
     </div>
